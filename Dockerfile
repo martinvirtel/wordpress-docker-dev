@@ -3,7 +3,7 @@ MAINTAINER Tomaz Zaman <tomaz@codeable.io>
 
 # We need these system-level scritps to run WordPress successfully
 RUN apk add --no-cache nginx mysql-client supervisor curl \
-    bash redis imagemagick-dev sudo
+    bash redis imagemagick-dev sudo less
 
 # As per image documentation, this is how we install PHP modules
 RUN docker-php-ext-install -j$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1) \
