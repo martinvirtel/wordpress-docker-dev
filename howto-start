@@ -1,0 +1,13 @@
+- SALT? (https://api.wordpress.org/secret-key/1.1/salt/ -> .env)
+-
+wp theme install --activate level
+wp plugin install --activate h5p
+
+
+Upload Size für NGINX und FPM erhöhen?
+
+
+
+wp-cli: --path=/usr/src/wordpress  PAGER=more
+
+

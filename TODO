@@ -1,0 +1,5 @@
+- I propose adding sudo to the alpine packages because it is not recommended to run wp-cli as root.
+
+- to use wp-cli, set the PAGER variable to more, as the busybox less is not compatible:
+
+
