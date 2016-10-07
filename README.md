@@ -1,3 +1,5 @@
+Based on git@github.com:codeablehq/DockerWordPress.git
+
 # WordPress developer's intro to Docker
 
 In order for this build this image properly, you need to download WordPress (or take an existing install) and copy `wp-content` into this directory, renaming it to just `content` - discard/ignore the WordPress core as it's being downloaded within the image itself.
