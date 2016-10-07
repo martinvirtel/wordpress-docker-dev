@@ -3,16 +3,18 @@ MAINTAINER Tomaz Zaman <tomaz@codeable.io>
 
 # We need these system-level scritps to run WordPress successfully
 RUN apk add --no-cache nginx mysql-client supervisor curl \
-    bash redis imagemagick-dev
+    bash redis imagemagick-dev sudo
 
 # As per image documentation, this is how we install PHP modules
 RUN docker-php-ext-install -j$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1) \
     iconv gd mbstring fileinfo curl xmlreader xmlwriter spl ftp mysqli opcache
 
-# Install imagemagick for PHP
-RUN apk add --no-cache libtool build-base autoconf \
+# Install imagemagick & ZIP for PHP
+RUN apk add --no-cache libtool zlib-dev build-base autoconf \
     && pecl install imagick \
     && docker-php-ext-enable imagick \
+    && pecl install zip \
+    && docker-php-ext-enable zip \
     && apk del libtool build-base autoconf
 
 # Create a user called "deployer" without a password and belonging
@@ -25,8 +27,8 @@ WORKDIR /var/www/content
 
 # Environment variables that make the reuse easier
 ENV WP_ROOT /usr/src/wordpress
-ENV WP_VERSION 4.5.2
-ENV WP_SHA1 bab94003a5d2285f6ae76407e7b1bbb75382c36e
+ENV WP_VERSION 4.6.1
+ENV WP_SHA1 027e065d30a64720624a7404a1820e6c6fff1202
 ENV WP_DOWNLOAD_URL https://wordpress.org/wordpress-$WP_VERSION.tar.gz
 
 # Download WP and extract it to /usr/src/wordpress
@@ -56,8 +58,10 @@ COPY wp-config.php $WP_ROOT
 RUN chown -R deployer:www-data $WP_ROOT \
     && chmod 640 $WP_ROOT/wp-config.php
 
+
+# www-data owns all the content/ dir to be able to update via web interface
 RUN mkdir -p /var/www/content/uploads \
-    && chown -R www-data:www-data /var/www/content/uploads
+    && chown -R www-data:www-data /var/www/content/
 
 # Copy supervisor configuration for both processes
 RUN mkdir -p /var/log/supervisor
